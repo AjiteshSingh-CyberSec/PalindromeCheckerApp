@@ -1,81 +1,32 @@
-import java.util.Stack;
-import java.util.Deque;
-import java.util.LinkedList;
-
-/* Strategy Interface */
-interface PalindromeStrategy {
-    boolean checkPalindrome(String input);
-}
-
-/* Stack Strategy */
-class StackStrategy implements PalindromeStrategy {
-
-    @Override
-    public boolean checkPalindrome(String input) {
-
-        String normalized = input.toLowerCase().replaceAll("[^a-z0-9]", "");
-
-        Stack<Character> stack = new Stack<>();
-
-        for (int i = 0; i < normalized.length(); i++) {
-            stack.push(normalized.charAt(i));
-        }
-
-        for (int i = 0; i < normalized.length(); i++) {
-            if (normalized.charAt(i) != stack.pop()) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-}
-
-/* Deque Strategy */
-class DequeStrategy implements PalindromeStrategy {
-
-    @Override
-    public boolean checkPalindrome(String input) {
-
-        String normalized = input.toLowerCase().replaceAll("[^a-z0-9]", "");
-
-        Deque<Character> deque = new LinkedList<>();
-
-        for (int i = 0; i < normalized.length(); i++) {
-            deque.addLast(normalized.charAt(i));
-        }
-
-        while (deque.size() > 1) {
-            if (deque.removeFirst() != deque.removeLast()) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-}
-
-/* Main Application */
 public class PalindroneCheckerApp {
+
+    // Recursive method to check palindrome
+    public static boolean isPalindrome(String str, int start, int end) {
+
+        // Base Condition (when pointers cross or equal)
+        if (start >= end) {
+            return true;
+        }
+
+        // If characters don't match
+        if (str.charAt(start) != str.charAt(end)) {
+            return false;
+        }
+
+        // Recursive call (move towards center)
+        return isPalindrome(str, start + 1, end - 1);
+    }
 
     public static void main(String[] args) {
 
-        String input = "A man a plan a canal Panama";
+        String input = "racecar";
 
-        // Inject strategy dynamically
-        PalindromeStrategy strategy;
-
-        // Change this line to switch algorithm
-        strategy = new StackStrategy();
-        // strategy = new DequeStrategy();
-
-        boolean result = strategy.checkPalindrome(input);
+        boolean result = isPalindrome(input, 0, input.length() - 1);
 
         System.out.println("======================================");
-        System.out.println("UC12 - Strategy Pattern Palindrome");
+        System.out.println("Palindrome Checker App - UC9");
         System.out.println("======================================");
-        System.out.println("Input String: " + input);
-        System.out.println("Strategy Used: " + strategy.getClass().getSimpleName());
+        System.out.println("Given String: " + input);
 
         if (result) {
             System.out.println("Result: The given string is a Palindrome.");
