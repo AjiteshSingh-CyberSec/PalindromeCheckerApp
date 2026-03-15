@@ -1,41 +1,46 @@
+import java.util.Scanner;
+
 public class PalindroneCheckerApp {
 
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter a string to check: ");
+        String userInput = scanner.nextLine();
 
-        String input = "A man a plan a canal Panama";
-
-        // Step 1: Normalize string
-        // Convert to lowercase and remove all non-alphanumeric characters
-        String normalized = input.toLowerCase().replaceAll("[^a-z0-9]", "");
-
-        boolean isPalindrome = true;
-
-        int start = 0;
-        int end = normalized.length() - 1;
-
-        // Step 2: Apply palindrome logic
-        while (start < end) {
-            if (normalized.charAt(start) != normalized.charAt(end)) {
-                isPalindrome = false;
-                break;
-            }
-            start++;
-            end--;
-        }
-
-        // Display Result
-        System.out.println("======================================");
-        System.out.println("Palindrome Checker App - UC10");
-        System.out.println("======================================");
-        System.out.println("Original String: " + input);
-        System.out.println("Normalized String: " + normalized);
+        PalindromeService service = new PalindromeService();
+        boolean isPalindrome = service.checkPalindrome(userInput);
 
         if (isPalindrome) {
-            System.out.println("Result: The given string is a Palindrome.");
+            System.out.println("The string is a palindrome.");
         } else {
-            System.out.println("Result: The given string is NOT a Palindrome.");
+            System.out.println("The string is not a palindrome.");
         }
 
-        System.out.println("Program executed successfully.");
+        scanner.close();
+    }
+}
+
+class PalindromeService {
+
+    public boolean checkPalindrome(String input) {
+        if (input == null) {
+            return false;
+        }
+
+        String cleanInput = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+        char[] charArray = cleanInput.toCharArray();
+
+        int left = 0;
+        int right = charArray.length - 1;
+
+        while (left < right) {
+            if (charArray[left] != charArray[right]) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+
+        return true;
     }
 }
