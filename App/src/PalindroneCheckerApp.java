@@ -1,34 +1,36 @@
 public class PalindroneCheckerApp {
 
-    // Recursive method to check palindrome
-    public static boolean isPalindrome(String str, int start, int end) {
-
-        // Base Condition (when pointers cross or equal)
-        if (start >= end) {
-            return true;
-        }
-
-        // If characters don't match
-        if (str.charAt(start) != str.charAt(end)) {
-            return false;
-        }
-
-        // Recursive call (move towards center)
-        return isPalindrome(str, start + 1, end - 1);
-    }
-
     public static void main(String[] args) {
 
-        String input = "racecar";
+        String input = "A man a plan a canal Panama";
 
-        boolean result = isPalindrome(input, 0, input.length() - 1);
+        // Step 1: Normalize string
+        // Convert to lowercase and remove all non-alphanumeric characters
+        String normalized = input.toLowerCase().replaceAll("[^a-z0-9]", "");
 
+        boolean isPalindrome = true;
+
+        int start = 0;
+        int end = normalized.length() - 1;
+
+        // Step 2: Apply palindrome logic
+        while (start < end) {
+            if (normalized.charAt(start) != normalized.charAt(end)) {
+                isPalindrome = false;
+                break;
+            }
+            start++;
+            end--;
+        }
+
+        // Display Result
         System.out.println("======================================");
-        System.out.println("Palindrome Checker App - UC9");
+        System.out.println("Palindrome Checker App - UC10");
         System.out.println("======================================");
-        System.out.println("Given String: " + input);
+        System.out.println("Original String: " + input);
+        System.out.println("Normalized String: " + normalized);
 
-        if (result) {
+        if (isPalindrome) {
             System.out.println("Result: The given string is a Palindrome.");
         } else {
             System.out.println("Result: The given string is NOT a Palindrome.");
