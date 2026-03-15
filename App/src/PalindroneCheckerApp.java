@@ -7,16 +7,32 @@ public class PalindroneCheckerApp {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter a string to check: ");
+        System.out.print("Enter a string to benchmark: ");
         String userInput = scanner.nextLine();
 
-        PalindromeService service = new PalindromeService(new StackStrategy());
-        System.out.println("Stack Strategy Result: " + service.executeStrategy(userInput));
+        PalindromeStrategy stackStrategy = new StackStrategy();
+        PalindromeStrategy dequeStrategy = new DequeStrategy();
+        PalindromeStrategy twoPointerStrategy = new TwoPointerStrategy();
 
-        service.setStrategy(new DequeStrategy());
-        System.out.println("Deque Strategy Result: " + service.executeStrategy(userInput));
+        System.out.println("\n--- Benchmarking Results ---");
+        benchmarkAlgorithm("Two-Pointer Strategy", twoPointerStrategy, userInput);
+        benchmarkAlgorithm("Stack Strategy", stackStrategy, userInput);
+        benchmarkAlgorithm("Deque Strategy", dequeStrategy, userInput);
 
         scanner.close();
+    }
+
+    private static void benchmarkAlgorithm(String name, PalindromeStrategy strategy, String input) {
+        long startTime = System.nanoTime();
+
+        boolean result = strategy.checkPalindrome(input);
+
+        long endTime = System.nanoTime();
+        long duration = endTime - startTime;
+
+        System.out.println(name + ":");
+        System.out.println("  Result: " + result);
+        System.out.println("  Time:   " + duration + " ns\n");
     }
 }
 
@@ -24,19 +40,24 @@ interface PalindromeStrategy {
     boolean checkPalindrome(String input);
 }
 
-class PalindromeService {
-    private PalindromeStrategy strategy;
+class TwoPointerStrategy implements PalindromeStrategy {
+    @Override
+    public boolean checkPalindrome(String input) {
+        if (input == null) {
+            return false;
+        }
+        String cleanInput = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+        int left = 0;
+        int right = cleanInput.length() - 1;
 
-    public PalindromeService(PalindromeStrategy strategy) {
-        this.strategy = strategy;
-    }
-
-    public void setStrategy(PalindromeStrategy strategy) {
-        this.strategy = strategy;
-    }
-
-    public boolean executeStrategy(String input) {
-        return strategy.checkPalindrome(input);
+        while (left < right) {
+            if (cleanInput.charAt(left) != cleanInput.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
     }
 }
 
@@ -46,7 +67,6 @@ class StackStrategy implements PalindromeStrategy {
         if (input == null) {
             return false;
         }
-
         String cleanInput = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
         Stack<Character> stack = new Stack<>();
 
@@ -69,7 +89,6 @@ class DequeStrategy implements PalindromeStrategy {
         if (input == null) {
             return false;
         }
-
         String cleanInput = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
         Deque<Character> deque = new ArrayDeque<>();
 
